@@ -50,11 +50,15 @@ if ($action == 'ajax') {
                         $nombre_completo = $row['nombres'] . " " . $row['apellidos'];
                         $nacionalidad = $row['nacionalidad'];
                         $fecha_nac = date('d/m/Y', strtotime($row['fecha_nacimiento']));
-                        $menor_edad = $row['menor_edad'];
+                        
+                        // CORRECCIÓN: Usamos isset o el operador null coalescing para evitar el Warning
+                        $menor_edad = $row['menor_edad'] ?? 0; 
+                        
                         $telefono = (!empty($row['telefono'])) ? $row['telefono'] : 'N/A';
                         $email = (!empty($row['email'])) ? $row['email'] : 'N/A';
-                        $ruta_pdf = $row['ruta_archivo'];
-                        $tipo_aut = $row['tipo_autorizacion'];
+                        $ruta_pdf = $row['ruta_archivo'] ?? ''; // También es buena práctica agregarlo aquí por si acaso
+                        $tipo_aut = $row['tipo_autorizacion'] ?? ''; // Y aquí también
+
                         ?>
                         <tr>
                             <td class="fw-bold text-secondary"><?php echo $rut; ?></td>
