@@ -51,14 +51,15 @@ if ($action == 'ajax') {
                         $nacionalidad = $row['nacionalidad'];
                         $fecha_nac = date('d/m/Y', strtotime($row['fecha_nacimiento']));
                         
-                        // CORRECCIÓN: Usamos isset o el operador null coalescing para evitar el Warning
-                        $menor_edad = $row['menor_edad'] ?? 0; 
+                        // CORRECCIÓN: Operador Null Coalescing (??) para evitar "Undefined array key"
+                        $menor_edad = $row['menor_edad'] ?? 0;
                         
                         $telefono = (!empty($row['telefono'])) ? $row['telefono'] : 'N/A';
                         $email = (!empty($row['email'])) ? $row['email'] : 'N/A';
-                        $ruta_pdf = $row['ruta_archivo'] ?? ''; // También es buena práctica agregarlo aquí por si acaso
-                        $tipo_aut = $row['tipo_autorizacion'] ?? ''; // Y aquí también
-
+                        
+                        // Aplicamos la misma protección a las otras variables del JOIN
+                        $ruta_pdf = $row['ruta_archivo'] ?? '';
+                        $tipo_aut = $row['tipo_autorizacion'] ?? '';
                         ?>
                         <tr>
                             <td class="fw-bold text-secondary"><?php echo $rut; ?></td>
