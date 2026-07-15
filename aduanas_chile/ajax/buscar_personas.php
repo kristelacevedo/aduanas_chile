@@ -19,7 +19,7 @@ if ($action == 'ajax') {
     
     $campos = "p.*, a.tipo_autorizacion, d.ruta_archivo";
     
-    // Filtro de búsqueda por RUT, Nombres o Apellidos (RF-06)
+    // Filtro de búsqueda por RUT, Nombres o Apellidos
     $where = " WHERE (p.rut_pasaporte LIKE '%".$q."%' OR p.nombres LIKE '%".$q."%' OR p.apellidos LIKE '%".$q."%')";
     
     $sql = "SELECT $campos FROM $tables $where ORDER BY p.created_at DESC";
@@ -46,20 +46,26 @@ if ($action == 'ajax') {
                 <tbody>
                     <?php
                     while ($row = mysqli_fetch_array($query)) {
-                        $rut = $row['rut_pasaporte'];
-                        $nombre_completo = $row['nombres'] . " " . $row['apellidos'];
-                        $nacionalidad = $row['nacionalidad'];
-                        $fecha_nac = date('d/m/Y', strtotime($row['fecha_nacimiento']));
+                        // Verificaciones seguras para evitar "Undefined array key"
+                        $rut = isset($row['rut_pasaporte']) ? $row['rut_pasaporte'] : '';
+                        $nombres = isset($row['nombres']) ? $row['nombres'] : '';
+                        $apellidos = isset($row['apellidos']) ? $row['apellidos'] : '';
+                        $nombre_completo = $nombres . " " . $apellidos;
                         
-                        // CORRECCIÓN A PRUEBA DE FALLOS:
+                        $nacionalidad = isset($row['nacionalidad']) ? $row['nacionalidad'] : '';
+                        
+                        $fecha_nac = '';
+                        if (isset($row['fecha_nacimiento']) && !empty($row['fecha_nacimiento'])) {
+                            $fecha_nac = date('d/m/Y', strtotime($row['fecha_nacimiento']));
+                        }
+                        
+                        // --- SOLUCIÓN DEL ERROR LÍNEA 53 ---
                         $menor_edad = isset($row['menor_edad']) ? $row['menor_edad'] : 0;
+                        $ruta_pdf = isset($row['ruta_archivo']) ? $row['ruta_archivo'] : '';
+                        $tipo_aut = isset($row['tipo_autorizacion']) ? $row['tipo_autorizacion'] : '';
                         
                         $telefono = (!empty($row['telefono'])) ? $row['telefono'] : 'N/A';
                         $email = (!empty($row['email'])) ? $row['email'] : 'N/A';
-                        
-                        // Protegemos también estas variables
-                        $ruta_pdf = isset($row['ruta_archivo']) ? $row['ruta_archivo'] : '';
-                        $tipo_aut = isset($row['tipo_autorizacion']) ? $row['tipo_autorizacion'] : '';
                         ?>
                         <tr>
                             <td class="fw-bold text-secondary"><?php echo $rut; ?></td>
