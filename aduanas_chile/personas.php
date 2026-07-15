@@ -53,6 +53,9 @@ include("modal/registro_personas.php"); // Incluimos el formulario modal
 include("footer.php"); 
 ?>
 
+<!-- Cargamos jQuery para que funcionen las peticiones AJAX y desaparezca el error rojo -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script>
 $(document).ready(function(){
     load(1); // Carga la tabla apenas abre la página
