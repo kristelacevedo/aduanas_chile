@@ -51,15 +51,15 @@ if ($action == 'ajax') {
                         $nacionalidad = $row['nacionalidad'];
                         $fecha_nac = date('d/m/Y', strtotime($row['fecha_nacimiento']));
                         
-                        // CORRECCIÓN: Operador Null Coalescing (??) para evitar "Undefined array key"
-                        $menor_edad = $row['menor_edad'] ?? 0;
+                        // CORRECCIÓN A PRUEBA DE FALLOS:
+                        $menor_edad = isset($row['menor_edad']) ? $row['menor_edad'] : 0;
                         
                         $telefono = (!empty($row['telefono'])) ? $row['telefono'] : 'N/A';
                         $email = (!empty($row['email'])) ? $row['email'] : 'N/A';
                         
-                        // Aplicamos la misma protección a las otras variables del JOIN
-                        $ruta_pdf = $row['ruta_archivo'] ?? '';
-                        $tipo_aut = $row['tipo_autorizacion'] ?? '';
+                        // Protegemos también estas variables
+                        $ruta_pdf = isset($row['ruta_archivo']) ? $row['ruta_archivo'] : '';
+                        $tipo_aut = isset($row['tipo_autorizacion']) ? $row['tipo_autorizacion'] : '';
                         ?>
                         <tr>
                             <td class="fw-bold text-secondary"><?php echo $rut; ?></td>
